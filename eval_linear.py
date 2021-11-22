@@ -45,6 +45,8 @@ parser.add_argument("--data_path", type=str, default="/path/to/imagenet",
                     help="path to dataset repository")
 parser.add_argument("--workers", default=10, type=int,
                     help="number of data loading workers")
+parser.add_argument("--data_classes", default=1000, type=int,
+                    help="number of data classes")
 
 #########################
 #### model parameters ###
@@ -133,7 +135,7 @@ def main():
 
     # build model
     model = resnet_models.__dict__[args.arch](output_dim=0, eval_mode=True)
-    linear_classifier = RegLog(1000, args.arch, args.global_pooling, args.use_bn)
+    linear_classifier = RegLog(args.data_classes, args.arch, args.global_pooling, args.use_bn)
 
     # convert batch norm layers (if any)
     linear_classifier = nn.SyncBatchNorm.convert_sync_batchnorm(linear_classifier)
